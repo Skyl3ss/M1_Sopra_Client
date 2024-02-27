@@ -14,6 +14,7 @@ Next, there are two other technologies that you should look at:
 * [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
 
 ## Prerequisites and Installation
+
 For your local development environment, you will need Node.js.\
 We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
 If you are confused about which download to choose, feel free to use these direct links:
