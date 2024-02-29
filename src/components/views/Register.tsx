@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import User from "models/User";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/Register.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
@@ -15,10 +15,10 @@ specific components that belong to the main one in the same file.
  */
 const FormField = (props) => {
   return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
+    <div className="register field">
+      <label className="register label">{props.label}</label>
       <input
-        className="login input"
+        className="register input"
         placeholder="enter here.."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -33,15 +33,15 @@ FormField.propTypes = {
   onChange: PropTypes.func,
 };
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
+  const [name, setname] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
 
-  const doLogin = async () => {
+  const doRegister = async () => {
     try {
       const requestBody = JSON.stringify({ username, name });
-      const response = await api.get("/checkUser", requestBody);
+      const response = await api.post("/users", requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -68,26 +68,18 @@ const Login = () => {
             onChange={(un: string) => setUsername(un)}
           />
           <FormField
-            label="Name"
+            label="Password"
             value={name}
-            onChange={(n) => setName(n)}
+            onChange={(n) => setname(n)}
           />
-          <div className="login button-container">
-            <div className="login button">
-              <Button
-                disabled={!username || !name}
-                width="100%"
-                onClick={() => doLogin()}
-              >
-                Login
-              </Button>
-              <Button
-                width="100%"
-                onClick={() => navigate("/register")}
-              >
-                Register instead
-              </Button>
-            </div>
+          <div className="register button-container">
+            <Button
+              disabled={!username || !name}
+              width="100%"
+              onClick={() => doRegister()}
+            >
+              Register
+            </Button>
           </div>
         </div>
       </div>
@@ -98,4 +90,4 @@ const Login = () => {
 /**
  * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
  */
-export default Login;
+export default Register
