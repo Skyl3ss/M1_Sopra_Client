@@ -41,7 +41,8 @@ const Login = () => {
   const doLogin = async () => {
     try {
       const requestBody = JSON.stringify({ username, name });
-      const response = await api.get("/checkUser", requestBody);
+      //console.log(requestBody)
+      const response = await api.post("/checkUser", requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -68,26 +69,25 @@ const Login = () => {
             onChange={(un: string) => setUsername(un)}
           />
           <FormField
-            label="Name"
+            label="Password"
             value={name}
             onChange={(n) => setName(n)}
           />
           <div className="login button-container">
-            <div className="login button">
-              <Button
-                disabled={!username || !name}
-                width="100%"
-                onClick={() => doLogin()}
-              >
-                Login
-              </Button>
-              <Button
-                width="100%"
-                onClick={() => navigate("/register")}
-              >
-                Register instead
-              </Button>
-            </div>
+            <Button
+              disabled={!username || !name}
+              width="100%"
+              onClick={() => doLogin()}
+            >
+              Login
+            </Button>
+              Don&apos;t have an account?
+            <Button
+              width="100%"
+              onClick={() => navigate("/register")}
+            >
+              Register instead
+            </Button>
           </div>
         </div>
       </div>

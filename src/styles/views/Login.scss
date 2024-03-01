@@ -42,12 +42,11 @@
   &.label {
     color: $textColor;
     margin-bottom: 10px;
-    text-transform: lowercase;
     font-weight: 300;
   }
   &.button-container {
-    display: flex;
+    display: grid;
     justify-content: center;
-    margin-top: 2em;
+    margin-top: 10px;
   }
 }

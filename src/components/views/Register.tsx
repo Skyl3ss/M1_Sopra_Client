@@ -80,6 +80,13 @@ const Register = () => {
             >
               Register
             </Button>
+              Already have an account?
+            <Button
+              width="100%"
+              onClick={() => navigate("/login")}
+            >
+              Login instead
+            </Button>
           </div>
         </div>
       </div>
