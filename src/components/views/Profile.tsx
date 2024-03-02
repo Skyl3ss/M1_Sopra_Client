@@ -2,21 +2,17 @@ import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
-import {useNavigate} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import "styles/views/Game.scss";
+import "styles/views/Profile.scss";
 import { User } from "types";
 
 const Player = ({ user }: { user: User }) => {
-  const navigate = useNavigate();
-
   return(
-    <div className="player container"
-      onClick={() => navigate(`/profile/${user.id}`)}
-    >
+    <div className="player container">
       <div className="player username">{user.username}</div>
-      <div className="player name">{user.status}</div>
+      <div className="player join date">{user.status}</div>
       <div className="player id">id: {user.id}</div>
     </div>
   );
@@ -26,7 +22,9 @@ Player.propTypes = {
   user: PropTypes.object,
 };
 
-const Game = () => {
+const Profile = () => {
+  // access the Parameters given by the url 
+  const { userid } = useParams();
   // use react-router-dom's hook to access navigation, more info: https://reactrouter.com/en/main/hooks/use-navigate 
   const navigate = useNavigate();
 
@@ -37,11 +35,6 @@ const Game = () => {
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
   const [users, setUsers] = useState<User[]>(null);
 
-  const logout = (): void => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
   // this can be achieved by leaving the second argument an empty array.
@@ -50,13 +43,13 @@ const Game = () => {
     // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
-        const response = await api.get("/users");
+        const response = await api.get("/getUser/" + userid);
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
         await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        
         // Get the returned users and update the state.
         setUsers(response.data);
 
@@ -76,22 +69,21 @@ const Game = () => {
     }
 
     fetchData();
-  }, []);
+    }, []);
 
-  let content = <Spinner />;
+    let content = <Spinner />;
 
-  if (users) {
+    if (users) {
     content = (
       <div className="game">
-        <ul className="game user-list">
-          {users.map((user: User) => (
-            <li key={user.id}>
-              <Player user={user} />
-            </li>
-          ))}
-        </ul>
-        <Button width="100%" onClick={() => logout()}>
-          Logout
+        <div className="game user-list">
+            <Player user={users} />
+        </div>
+        <Button width="100%" onClick={() => navigate("/game")}>
+            Menu
+        </Button>
+        <Button width="100%" onClick={() => navigate("/game")}>
+            Edit Profile to be implemented
         </Button>
       </div>
     );
@@ -99,13 +91,14 @@ const Game = () => {
 
   return (
     <BaseContainer className="game container">
-      <h2>Happy Coding!</h2>
+      <h2>Profile Menu</h2>
       <p className="game paragraph">
-        Get all users from secure endpoint:
+        Details
       </p>
       {content}
+
     </BaseContainer>
   );
 };
 
-export default Game;
+export default Profile;
