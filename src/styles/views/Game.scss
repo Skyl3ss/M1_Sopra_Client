@@ -33,12 +33,17 @@
 }
 
 .player {
+  &:hover {
+    transform: translateY(-2px);
+  }
   &.container {
     margin: 0.5em 0;
     width: 20em;
     padding: 10px;
     border-radius: $borderRadius;
     display: flex;
+    cursor: pointer;
+    transition: all 0.3s ease;
     align-items: center;
     background: lighten($background, 5);
   }
