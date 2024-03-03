@@ -8,31 +8,26 @@ import PropTypes from "prop-types";
 import "styles/views/ProfileEdit.scss";
 import { User } from "types";
 
-const Person = ({ user }: { user: User }) => {
-  return(
-    <div>
-      <div className="person container">
-        <div className="person username">Username: {user.username}</div>
-      </div>
-      <div className="person container">
-        <div className="person status">Online Status: {user.status}</div>
-      </div>
-      <div className="person container">
-        <div className="person id">User-Id: {user.id}</div>
-      </div>
-      <div className="person container">
-        <div className="person birthday">Birthday: {user.birthday}</div>
-      </div>
-      <div className="person container">
-        <div className="person creationdate">Creation-Date: {user.creationDate}</div>
-      </div>
+const FormField = (props) => {
+  return (
+    <div className="login field">
+      <label className="login label">{props.label}</label>
+      <input
+        className="login input"
+        placeholder="enter here.."
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+      />
     </div>
   );
 };
 
-Person.propTypes = {
-  user: PropTypes.object,
+FormField.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
+
 
 const ProfileEdit = () => {
   // access the Parameters given by the url 
@@ -83,6 +78,40 @@ const ProfileEdit = () => {
     fetchData();
   }, []);
 
+  const Person = ({ user }: { user: User }) => {
+    const [username, setUsername] = useState<string>(user.username);
+    const [birthday, setBirthday] = useState<string>(user.birthday);
+  
+    return(
+      <div>
+        <div className="person container">
+          <FormField
+            label="Username"
+            value={username}
+            onChange={(un: string) => setUsername(un)}
+          />
+        </div>
+        <div className="person container">
+          <FormField
+            label="Birthday"
+            value={birthday}
+            onChange={(un: string) => setBirthday(un)}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  Person.propTypes = {
+    user: PropTypes.object,
+  };
+
+  const doChanges = async () => {
+    const requestBody = JSON.stringify({ username, password });
+    const response = await api.post("/TOBEIMPLEMENTED", requestBody);
+
+    navigate("/profile/"+userid)
+  }
   let content = <Spinner />;
   //handle the save click as an execution
   if (users) {
@@ -91,12 +120,13 @@ const ProfileEdit = () => {
         <div className="game user-list">
           <Person user={users} />
         </div>
+        <Button width="100%" onClick={() => doChanges()}>
+            Save
+        </Button>
         <Button width="100%" onClick={() => navigate("/profile/"+userid)}>
             Cancel
         </Button>
-        <Button width="100%" onClick={() => navigate("/profile/"+userid)}>
-            Save
-        </Button>
+        
       </div>
     );
   }

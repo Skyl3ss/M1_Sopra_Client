@@ -41,7 +41,7 @@ const Login = () => {
   const doLogin = async () => {
     try {
       const requestBody = JSON.stringify({ username, password });
-      //console.log(requestBody)
+
       const response = await api.post("/checkUser", requestBody);
 
       // Get the returned user and update a new object.
