@@ -8,17 +8,29 @@ import PropTypes from "prop-types";
 import "styles/views/Profile.scss";
 import { User } from "types";
 
-const Player = ({ user }: { user: User }) => {
+const Person = ({ user }: { user: User }) => {
   return(
-    <div className="player container">
-      <div className="player username">{user.username}</div>
-      <div className="player join date">{user.status}</div>
-      <div className="player id">id: {user.id}</div>
+    <div>
+      <div className="person container">
+        <div className="person username">Username: {user.username}</div>
+      </div>
+      <div className="person container">
+        <div className="person status">Online Status: {user.status}</div>
+      </div>
+      <div className="person container">
+        <div className="person id">User-Id: {user.id}</div>
+      </div>
+      <div className="person container">
+        <div className="person birthday">Birthday: {user.birthday}</div>
+      </div>
+      <div className="person container">
+        <div className="person creationdate">Creation-Date: {user.creationDate}</div>
+      </div>
     </div>
   );
 };
 
-Player.propTypes = {
+Person.propTypes = {
   user: PropTypes.object,
 };
 
@@ -69,20 +81,20 @@ const Profile = () => {
     }
 
     fetchData();
-    }, []);
+  }, []);
 
-    let content = <Spinner />;
+  let content = <Spinner />;
 
-    if (users) {
+  if (users) {
     content = (
       <div className="game">
         <div className="game user-list">
-            <Player user={users} />
+          <Person user={users} />
         </div>
         <Button width="100%" onClick={() => navigate("/game")}>
             Menu
         </Button>
-        <Button width="100%" onClick={() => navigate("/game")}>
+        <Button width="100%" onClick={() => navigate("/editprofile/"+userid)}>
             Edit Profile to be implemented
         </Button>
       </div>
