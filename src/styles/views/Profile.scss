@@ -32,33 +32,25 @@
   }
 }
 
-.player {
-  &:hover {
-    transform: translateY(-2px);
-  }
+.person {
   &.container {
     margin: 0.5em 0;
     width: 20em;
     padding: 10px;
     border-radius: $borderRadius;
-    display: flex;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: grid;
     align-items: center;
     background: lighten($background, 5);
   }
-  &.name {
+  &.status {
     font-weight: 300;
-    margin-left: 5px;
   }
   &.username {
     font-weight: 500;
     color: $accent;
   }
   &.id {
-    margin-left: auto;
-    margin-right: 10px;
     font-family: $fontMono;
     font-weight: 300;
   }
-}
+} 
