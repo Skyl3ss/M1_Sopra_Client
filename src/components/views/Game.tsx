@@ -38,9 +38,22 @@ const Game = () => {
   const [users, setUsers] = useState<User[]>(null);
 
   const logout = (): void => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+    const token = (localStorage.getItem("token"))
+    const status = "OFFLINE"
+    const requestBody = JSON.stringify({ token, status }); // Construct the request body
+    api.put("/status", requestBody) // Send the POST request to your API endpoint
+      .then(response => {
+        console.log(response); // Log the response if needed
+        localStorage.removeItem("token"); // Remove token from localStorage
+        navigate("/login"); // Navigate to the login page
+      })
+      .catch(error => { //perhaps change so that the status doesn't get messed up
+        console.error("Error:", error); // Log any errors
+        localStorage.removeItem("token");
+        navigate("/login")
+      });
+  }
+  
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
