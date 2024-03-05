@@ -3,6 +3,7 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
+import {ProfileGuard} from "../routeProtectors/ProfileGuard";
 import Login from "../../views/Login";
 import Register from "../../views/Register";
 import Profile from "../../views/Profile"
@@ -37,7 +38,7 @@ const AppRouter = () => {
           <Route path="/profile/:userid" element={<Profile/>} />
         </Route>
 
-        <Route path="/editprofile/:userid" element={<GameGuard />}>
+        <Route path="/editprofile/:userid" element={<ProfileGuard />}>
           <Route path="/editprofile/:userid" element={<ProfileEdit/>} />
         </Route>
 

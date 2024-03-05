@@ -46,6 +46,7 @@ const Profile = () => {
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
   const [users, setUsers] = useState<User[]>(null);
+  const [editable,setEditable] = useState<Boolean>(false)
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
@@ -55,7 +56,12 @@ const Profile = () => {
     // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
-        const response = await api.get("/getUser/" + userid);
+        const response = await api.get("/users/" + userid);
+        const token = localStorage.getItem("token")
+        const requestBody = JSON.stringify({token})
+        const boolresponse = await api.post("/checkUser/" + userid, requestBody)
+        const { data } = boolresponse;
+        setEditable(data)
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
@@ -94,9 +100,11 @@ const Profile = () => {
         <Button width="100%" onClick={() => navigate("/game")}>
             Menu
         </Button>
-        <Button width="100%" onClick={() => navigate("/editprofile/"+userid)}>
-            Edit Profile to be implemented
-        </Button>
+        {editable &&(
+          <Button width="100%" onClick={() => navigate("/editprofile/"+userid)}>
+            Edit Profile
+          </Button>
+        )}
       </div>
     );
   }

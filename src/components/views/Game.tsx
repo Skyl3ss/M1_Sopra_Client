@@ -41,7 +41,7 @@ const Game = () => {
     const token = (localStorage.getItem("token"))
     const status = "OFFLINE"
     const requestBody = JSON.stringify({ token, status }); // Construct the request body
-    api.put("/status", requestBody) // Send the POST request to your API endpoint
+    api.put("/status", requestBody) // Send the put request to your API endpoint
       .then(response => {
         console.log(response); // Log the response if needed
         localStorage.removeItem("token"); // Remove token from localStorage

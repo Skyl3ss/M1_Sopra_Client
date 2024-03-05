@@ -5,4 +5,5 @@ export type User = {
   status : string;
   creationDate : string
   birthday : string
+  token : string
 };
