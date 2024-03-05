@@ -15,6 +15,7 @@ const FormField = (props) => {
       <input
         className="login input"
         placeholder="enter here.."
+        type={props.type}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
       />
@@ -26,51 +27,48 @@ FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.string,
 };
 
 
 const ProfileEdit = () => {
   // access the Parameters given by the url 
   const { userid } = useParams();
-  // use react-router-dom's hook to access navigation, more info: https://reactrouter.com/en/main/hooks/use-navigate 
+
   const navigate = useNavigate();
 
-  // define a state variable (using the state hook).
-  // if this variable changes, the component will re-render, but the variable will
-  // keep its value throughout render cycles.
-  // a component can have as many state variables as you like.
-  // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
-  const [users, setUsers] = useState<User[]>(null);
+  const [user, setUser] = useState<User[]>(null);
+  const [username, setUsername] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
 
-  // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
   // this can be achieved by leaving the second argument an empty array.
-  // for more information on the effect hook, please see https://react.dev/reference/react/useEffect 
   useEffect(() => {
     // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
-        const response = await api.get("/getUser/" + userid);
+        const response = await api.get("/users/" + userid);
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
-        // feel free to remove it :)
         await new Promise((resolve) => setTimeout(resolve, 1000));
         
         // Get the returned users and update the state.
-        setUsers(response.data);
-
-        // See here to get more data.
+        setUser(response.data);
         console.log(response);
+
+        setUsername(response.data.username);
+        setBirthday(response.data.birthday);
+
       } catch (error) {
         console.error(
-          `Something went wrong while fetching the users: \n${handleError(
+          `Something went wrong while fetching the user: \n${handleError(
             error
           )}`
         );
         console.error("Details:", error);
         alert(
-          "Something went wrong while fetching the users! See the console for details."
+          "Something went wrong while fetching the user! See the console for details."
         );
       }
     }
@@ -78,15 +76,14 @@ const ProfileEdit = () => {
     fetchData();
   }, []);
 
-  const Person = ({ user }: { user: User }) => {
-    const [username, setUsername] = useState<string>(user.username);
-    const [birthday, setBirthday] = useState<string>(user.birthday);
   
+  const Person = ({ user }: { user: User }) => {
     return(
       <div>
         <div className="person container">
           <FormField
             label="Username"
+            type="text"
             value={username}
             onChange={(un: string) => setUsername(un)}
           />
@@ -94,6 +91,7 @@ const ProfileEdit = () => {
         <div className="person container">
           <FormField
             label="Birthday"
+            type="date"
             value={birthday}
             onChange={(un: string) => setBirthday(un)}
           />
@@ -107,18 +105,23 @@ const ProfileEdit = () => {
   };
 
   const doChanges = async () => {
-    const requestBody = JSON.stringify({ username, password });
-    const response = await api.post("/TOBEIMPLEMENTED", requestBody);
-
+    user.username = username
+    user.birthday = birthday
+    const token = (localStorage.getItem("token"))
+    console.log(user)
+    const requestBody = JSON.stringify({ username, birthday, token});
+    // catch errors TO BE IMPLEMENTED
+    const response = await api.put("/users/"+user.id, requestBody);
+    console.log(response)
     navigate("/profile/"+userid)
   }
   let content = <Spinner />;
   //handle the save click as an execution
-  if (users) {
+  if (user) {
     content = (
       <div className="game">
         <div className="game user-list">
-          <Person user={users} />
+          <Person user={user} />
         </div>
         <Button width="100%" onClick={() => doChanges()}>
             Save
