@@ -21,6 +21,7 @@ const FormField = (props) => {
         className="register input"
         placeholder="enter here.."
         value={props.value}
+        type={props.type}
         onChange={(e) => props.onChange(e.target.value)}
       />
     </div>
@@ -31,6 +32,11 @@ FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.string,
+};
+
+FormField.defaultProps = {
+  type: "text",
 };
 
 const Register = () => {
@@ -70,6 +76,7 @@ const Register = () => {
           <FormField
             label="Password"
             value={password}
+            type="password"
             onChange={(n) => setPassword(n)}
           />
           <div className="register button-container">
