@@ -82,8 +82,9 @@ const Game = () => {
           )}`
         );
         console.error("Details:", error);
+        localStorage.removeItem("token");
         alert(
-          "Something went wrong while fetching the users! See the console for details."
+          "Something went wrong while fetching the users! Please login again."
         );
       }
     }
