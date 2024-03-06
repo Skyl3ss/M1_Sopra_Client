@@ -42,21 +42,17 @@ const ProfileEdit = () => {
   const [birthday, setBirthday] = useState<string>("");
 
   // in this case, the effect hook is only run once, the first time the component is mounted
-  // this can be achieved by leaving the second argument an empty array.
   useEffect(() => {
-    // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
+    //async function for fetching user data
     async function fetchData() {
       try {
         const response = await api.get("/users/" + userid);
 
-        // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         await new Promise((resolve) => setTimeout(resolve, 1000));
         
-        // Get the returned users and update the state.
+        // Get the returned user and update the state.
         setUser(response.data);
-        console.log(response);
-
         setUsername(response.data.username);
         setBirthday(response.data.birthday);
 
@@ -76,6 +72,13 @@ const ProfileEdit = () => {
     fetchData();
   }, []);
 
+  const doChanges = async () => {
+    const token = (localStorage.getItem("token"))
+    const requestBody = JSON.stringify({ username, birthday, token});
+    // catch errors TO BE IMPLEMENTED
+    await api.put("/users/"+user.id, requestBody);
+    navigate("/profile/"+userid)
+  }
   
   const Person = ({ user }: { user: User }) => {
     return(
@@ -104,17 +107,7 @@ const ProfileEdit = () => {
     user: PropTypes.object,
   };
 
-  const doChanges = async () => {
-    user.username = username
-    user.birthday = birthday
-    const token = (localStorage.getItem("token"))
-    console.log(user)
-    const requestBody = JSON.stringify({ username, birthday, token});
-    // catch errors TO BE IMPLEMENTED
-    const response = await api.put("/users/"+user.id, requestBody);
-    console.log(response)
-    navigate("/profile/"+userid)
-  }
+
   let content = <Spinner />;
   //handle the save click as an execution
   if (user) {
