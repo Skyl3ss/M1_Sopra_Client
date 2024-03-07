@@ -6,7 +6,7 @@ import {useParams, useNavigate} from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/ProfileEdit.scss";
-import { User } from "types";
+
 
 const FormField = (props) => {
   return (
@@ -18,6 +18,7 @@ const FormField = (props) => {
         type={props.type}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
+        autoFocus={props.autoFocus}
       />
     </div>
   );
@@ -28,8 +29,12 @@ FormField.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   type: PropTypes.string,
+  autoFocus: PropTypes.bool,
 };
 
+FormField.defaultProps = {
+  autoFocus: false,
+};
 
 const ProfileEdit = () => {
   // access the Parameters given by the url 
@@ -37,9 +42,9 @@ const ProfileEdit = () => {
 
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<User[]>(null);
-  const [username, setUsername] = useState<string>("");
-  const [birthday, setBirthday] = useState<string>("");
+  const [username, setUsername] = useState<string>(null);
+  const [birthday, setBirthday] = useState<string>(null);
+  const [loading, setLoading] = useState(false)
 
   // in this case, the effect hook is only run once, the first time the component is mounted
   useEffect(() => {
@@ -52,9 +57,9 @@ const ProfileEdit = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         
         // Get the returned user and update the state.
-        setUser(response.data);
         setUsername(response.data.username);
         setBirthday(response.data.birthday);
+        setLoading(true)
 
       } catch (error) {
         console.error(
@@ -72,15 +77,27 @@ const ProfileEdit = () => {
     fetchData();
   }, []);
 
+  //handle the save click as an execution
   const doChanges = async () => {
     const token = (localStorage.getItem("token"))
     const requestBody = JSON.stringify({ username, birthday, token});
-    // catch errors TO BE IMPLEMENTED
-    await api.put("/users/"+user.id, requestBody);
+    try {
+      await api.put("/users/"+userid, requestBody);
+    } catch (error) { 
+      console.error(
+        `Something went wrong while editing the user: \n${handleError(
+          error
+        )}`
+      );
+      console.error("Details:", error);
+      alert(
+        "Something went wrong while editing the user! See the console for details."
+      );
+    }
     navigate("/profile/"+userid)
   }
   
-  const Person = ({ user }: { user: User }) => {
+  const Person = () => {
     return(
       <div>
         <div className="person container">
@@ -89,6 +106,7 @@ const ProfileEdit = () => {
             type="text"
             value={username}
             onChange={(un: string) => setUsername(un)}
+            autoFocus={true}
           />
         </div>
         <div className="person container">
@@ -96,25 +114,20 @@ const ProfileEdit = () => {
             label="Birthday"
             type="date"
             value={birthday}
-            onChange={(un: string) => setBirthday(un)}
+            onChange={(n: string) => setBirthday(n)}
           />
         </div>
       </div>
     );
   };
 
-  Person.propTypes = {
-    user: PropTypes.object,
-  };
-
-
   let content = <Spinner />;
-  //handle the save click as an execution
-  if (user) {
+
+  if (loading) {
     content = (
       <div className="game">
         <div className="game user-list">
-          <Person user={user} />
+          <Person />
         </div>
         <Button width="100%" onClick={() => doChanges()}>
             Save
