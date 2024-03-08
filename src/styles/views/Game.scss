@@ -47,9 +47,9 @@
     align-items: center;
     background: lighten($background, 5);
   }
-  &.name {
+  &.status {
     font-weight: 300;
-    margin-left: 5px;
+    margin-left: 10px;
   }
   &.username {
     font-weight: 500;

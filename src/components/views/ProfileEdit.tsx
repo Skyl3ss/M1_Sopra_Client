@@ -8,12 +8,12 @@ import PropTypes from "prop-types";
 import "styles/views/ProfileEdit.scss";
 
 
-const FormField = (props) => {
+const ChangeField = (props) => {
   return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
+    <div className="change field">
+      <label className="change label">{props.label}</label>
       <input
-        className="login input"
+        className="change input"
         placeholder="enter here.."
         type={props.type}
         value={props.value}
@@ -24,7 +24,7 @@ const FormField = (props) => {
   );
 };
 
-FormField.propTypes = {
+ChangeField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
@@ -32,7 +32,7 @@ FormField.propTypes = {
   autoFocus: PropTypes.bool,
 };
 
-FormField.defaultProps = {
+ChangeField.defaultProps = {
   autoFocus: false,
 };
 
@@ -97,54 +97,43 @@ const ProfileEdit = () => {
     navigate("/profile/"+userid)
   }
   
-  const Person = () => {
-    return(
-      <div>
-        <div className="person container">
-          <FormField
+  let content = <Spinner />;
+
+  if (loading) {
+    content = (
+      <div className="change container">
+        <div className="change form">
+          <ChangeField
             label="Username"
             type="text"
             value={username}
             onChange={(un: string) => setUsername(un)}
             autoFocus={true}
           />
-        </div>
-        <div className="person container">
-          <FormField
+          <ChangeField
             label="Birthday"
             type="date"
             value={birthday}
             onChange={(n: string) => setBirthday(n)}
           />
+          <div className="change button-container">
+            <Button width="100%" onClick={() => doChanges()}>
+                Save
+            </Button>
+            <Button width="100%" onClick={() => navigate("/profile/"+userid)}>
+                Cancel
+            </Button>
+          </div>
         </div>
-      </div>
-    );
-  };
-
-  let content = <Spinner />;
-
-  if (loading) {
-    content = (
-      <div className="game">
-        <div className="game user-list">
-          <Person />
-        </div>
-        <Button width="100%" onClick={() => doChanges()}>
-            Save
-        </Button>
-        <Button width="100%" onClick={() => navigate("/profile/"+userid)}>
-            Cancel
-        </Button>
-        
       </div>
     );
   }
 
   return (
-    <BaseContainer className="game container">
+    <BaseContainer className="profileEdit container">
       <h2>Profile Menu</h2>
-      <p className="game paragraph">
-        Details
+      <p className="profileEdit paragraph">
+        Edit Details
       </p>
       {content}
 
