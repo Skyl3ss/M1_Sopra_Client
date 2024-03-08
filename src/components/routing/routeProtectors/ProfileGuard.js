@@ -32,7 +32,6 @@ export const ProfileGuard = () => {
   
     fetchData();
   }, []);
-  console.log(editable)
   if (editable) {
 
     return <Outlet />;
